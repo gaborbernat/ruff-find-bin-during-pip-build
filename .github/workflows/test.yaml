@@ -1,0 +1,24 @@
+name: github pages
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: setup python for tox
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/checkout@v4
+      - run: uv venv -p 3.12 --seed
+      - run: uv pip install .
+        continue-on-error: true
+      - run: .venv/bin/pip install .
